@@ -254,6 +254,14 @@ class Homestead
             end
         end
 
+        # Install InfluxDB If Necessary
+        if settings.has_key?("influxdb") && settings["influxdb"]
+            config.vm.provision "shell" do |s|
+                s.path = scriptDir + "/install-influxdb.sh"
+            end
+        end
+
+
         # Configure All Of The Configured Databases
         if settings.has_key?("databases")
             settings["databases"].each do |db|
@@ -284,7 +292,45 @@ class Homestead
                         s.args = [db]
                     end
                 end
+
+                 if settings.has_key?("influxdb") && settings["influxdb"]
+                    config.vm.provision "shell" do |s|
+                        s.name = "Creating InfluxDB Database: " + db
+                        s.path = scriptDir + "/create-influxdb.sh"
+                        s.args = [db]
+                    end
+                end
             end
+        end
+
+	    # Install and setup RabbitMQ
+        if settings.has_key?("rabbitmq") && settings["rabbitmq"]
+            rsett = settings["rabbitmq"]
+            config.vm.provision "shell" do |s|
+                s.name = "Installing RabbitMQ:"
+                s.path = scriptDir + "/install-rabbitmq.sh"
+            end
+
+    	    config.vm.provision "shell" do |s|
+        		s.name = "Configuring RabbitMQ:"
+        		s.path = scriptDir + "/create-rabbitmq.sh"
+        		s.args = [rsett['host'] ||- "0.0.0.0", rsett['port'] ||- "5672", rsett['user'] ||- "homestead", rsett['password'] ||- "secret"]
+    	    end
+        end
+
+        # Install and setup Laravel echo server
+        if settings.has_key?("echo-server") && settings["echo-server"]
+            setts = settings["echo-server"]
+            config.vm.provision "shell" do |s|
+                s.name = "Installing Echo server:"
+                s.path = scriptDir + "/install-echoserver.sh"
+            end
+
+            #config.vm.provision "shell" do |s|
+            #    s.name = "Configuring rabbit mq:"
+            #    s.path = scriptDir + "/create-rabbitmq.sh"
+            #    s.args = [rsett['host'] ||- "0.0.0.0", rsett['port'] ||- "5672"]
+            #end
         end
 
         # Configure All Of The Server Environment Variables
@@ -338,6 +384,31 @@ class Homestead
                     settings["blackfire"][0]["client-id"],
                     settings["blackfire"][0]["client-token"]
                 ]
+            end
+        end
+
+        # Install php redis
+        if settings.has_key?("redis") && settings["redis"]
+            setts = settings["redis"]
+            config.vm.provision "shell" do |s|
+                s.name = "Installing PHP redis:"
+                s.path = scriptDir + "/install-redis.sh"
+            end
+        end
+
+        # Configure and start seller tools app
+        if settings.has_key?("seller-tools") && settings["seller-tools"]
+            setts = settings["seller-tools"]
+            config.vm.provision "shell" do |s|
+                s.name = "Creating Seller tools:"
+                s.path = scriptDir + "/create-sellertools.sh"
+                s.args = [setts['path'] ||- "/home/vagrant/Code/seller-tools"]
+            end
+            if setts['autostart']
+                config.vm.provision "shell", run: "always" do |s|
+                    s.name = "Starting Seller tools:"
+                    s.inline = "systemctl restart st-app.target"
+                end
             end
         end
     end

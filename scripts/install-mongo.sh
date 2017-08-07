@@ -27,6 +27,9 @@ sudo echo  "extension = mongodb.so" > /etc/php/7.1/mods-available/mongo.ini
 sudo ln -s /etc/php/7.1/mods-available/mongo.ini /etc/php/7.1/fpm/conf.d/mongo.ini
 sudo ln -s /etc/php/7.1/mods-available/mongo.ini /etc/php/7.1/cli/conf.d/mongo.ini
 
+cat /etc/php/7.1/cli/php.ini | sed '/mongo/,+1 d' > /etc/php/7.1/cli/php.ini
+cat /etc/php/7.1/fpm/php.ini | sed '/mongo/,+1 d' > /etc/php/7.1/fpm/php.ini
+
 cat > /etc/systemd/system/mongodb.service <<EOL
 [Unit]
 Description=High-performance, schema-free document-oriented database

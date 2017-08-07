@@ -10,15 +10,34 @@ keys:
     - ~/.ssh/id_rsa
 
 folders:
-    - map: ~/Code
+    - map: ~/Documents/Code
       to: /home/vagrant/Code
 
 sites:
-    - map: homestead.app
-      to: /home/vagrant/Code/Laravel/public
+    - map: seller-tools.app
+      to: 3000
+      type: proxy
+    - map: api.seller-tools.app
+      to: /home/vagrant/Code/seller-tools/app/public
+    - map: fetcher.seller-tools.app
+      to: /home/vagrant/Code/seller-tools/fetcher/public
+    - map: rm.seller-tools.app
+      to: /home/vagrant/Code/seller-tools/rotation-manager/public
 
 databases:
-    - homestead
+    - seller_tools
+
+mongodb: true
+influxdb: true
+echo-server: true
+redis: true
+
+rabbitmq:
+    port: 5672
+
+seller-tools:
+  path: '/home/vagrant/Code/seller-tools'
+  autostart: true
 
 # blackfire:
 #     - id: foo
