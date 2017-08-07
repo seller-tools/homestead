@@ -10,7 +10,7 @@ keys:
     - ~/.ssh/id_rsa
 
 folders:
-    - map: ~/Documents/Code
+    - map: ~/Code
       to: /home/vagrant/Code
 
 sites:
