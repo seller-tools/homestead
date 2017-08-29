@@ -25,8 +25,9 @@ cat > /etc/systemd/system/st-fetchers.target <<EOF
 [Unit]
 Description=Seller tools Fetchers
 PartOf=st-backend.target
-Requires=st-fetcher@default.service \
-		st-fetcher@priority.service
+Requires=st-fetcher@fetcher-default.service \
+		st-fetcher@fetcher-priority.service \
+		st-fetcher@progress.service
 EOF
 
 cat > /etc/systemd/system/st-spiders.target <<EOF
@@ -57,7 +58,7 @@ PartOf=st-fetchers.target
 Type=simple
 User=vagrant
 WorkingDirectory=$stpath
-ExecStart=/usr/bin/php ${stpath}/fetcher/artisan worker:run fetcher-%i
+ExecStart=/usr/bin/php ${stpath}/fetcher/artisan worker:run %i
 EOF
 
 cat > /etc/systemd/system/st-spider@.service <<EOF
