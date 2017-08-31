@@ -31,6 +31,7 @@ mongodb: true
 influxdb: true
 echo-server: true
 redis: true
+elasticsearch: true
 
 rabbitmq:
     port: 5672

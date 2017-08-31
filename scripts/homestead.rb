@@ -396,6 +396,15 @@ class Homestead
             end
         end
 
+        # Install php redis
+        if settings.has_key?("elasticsearch") && settings["elasticsearch"]
+            setts = settings["elasticsearch"]
+            config.vm.provision "shell" do |s|
+                s.name = "Installing elasticsearch:"
+                s.path = scriptDir + "/install-elasticsearch.sh"
+            end
+        end
+
         # Configure and start seller tools app
         if settings.has_key?("seller-tools") && settings["seller-tools"]
             setts = settings["seller-tools"]
