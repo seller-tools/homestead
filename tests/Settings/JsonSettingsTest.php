@@ -121,7 +121,7 @@ class JsonSettingsTest extends TestCase
         $settings = new JsonSettings([
             'sites' => [
                 [
-                    'map' => 'homestead.app',
+                    'map' => 'homestead.localhost',
                     'to' => '/home/vagrant/Laravel/public',
                     'type' => 'laravel',
                     'schedule' => true,
@@ -134,7 +134,7 @@ class JsonSettingsTest extends TestCase
 
         $attributes = $settings->toArray();
         $this->assertEquals([
-            'map' => 'homestead.app',
+            'map' => 'homestead.localhost',
             'to' => '/home/vagrant/Laravel/public',
             'type' => 'laravel',
             'schedule' => true,
@@ -150,7 +150,7 @@ class JsonSettingsTest extends TestCase
 
         $attributes = $settings->toArray();
         $this->assertEquals([
-            'map' => 'test.com.app',
+            'map' => 'test.com.localhost',
             'to' => '/home/vagrant/test-com/public',
         ], $attributes['sites'][0]);
     }
@@ -161,8 +161,8 @@ class JsonSettingsTest extends TestCase
         $settings = new JsonSettings([
             'folders' => [
                 [
-                    'map' => '~/Code',
-                    'to' => '/home/vagrant/Code',
+                    'map' => '~/code',
+                    'to' => '/home/vagrant/code',
                     'type' => 'nfs',
                 ],
             ],
@@ -173,7 +173,7 @@ class JsonSettingsTest extends TestCase
         $attributes = $settings->toArray();
         $this->assertEquals([
             'map' => '/a/path/for/project_name',
-            'to' => '/home/vagrant/Code',
+            'to' => '/home/vagrant/code',
             'type' => 'nfs',
         ], $attributes['folders'][0]);
     }
