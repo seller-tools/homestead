@@ -21,6 +21,8 @@ sites:
       to: /home/vagrant/Code/seller-tools/app/public
     - map: fetcher.seller-tools.app
       to: /home/vagrant/Code/seller-tools/fetcher/public
+    - map: graphs.seller-tools.app
+      to: /home/vagrant/Code/seller-tools/graphs/public
     - map: rm.seller-tools.app
       to: /home/vagrant/Code/seller-tools/rotation-manager/public
 
