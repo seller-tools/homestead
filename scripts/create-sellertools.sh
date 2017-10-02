@@ -13,11 +13,11 @@ EOF
 cat > /etc/systemd/system/st-backend.target <<EOF
 [Unit]
 Description=Seller tools Backend
-After=rabbitmq-server.target
+After=rabbitmq-server.target elasticsearch.service
 Requires=st-fetchers.target \
 		st-spiders.target \
 		st-mwsworkers.target \
-		st-echo.service 
+		st-echo.service
 PartOf=st-app.target
 EOF
 

@@ -12,5 +12,6 @@ sudo update-alternatives --config java
 wget –q https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.5.2.deb
 sudo dpkg -i elasticsearch-5.5.2.deb
 sudo systemctl enable elasticsearch.service
+sudo systemctl start elasticsearch.service
 systemctl status elasticsearch.service
 touch /home/vagrant/.elasticsearch
