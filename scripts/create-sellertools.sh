@@ -6,15 +6,15 @@ cat > /etc/systemd/system/st-app.target <<EOF
 [Unit]
 Description=Seller tools
 After=network.target php7.1-fpm.service
-Requires=st-backend.target 
-Wants=st-frontend.service
+Wants=st-frontend.service\
+		st-backend.target 
 EOF
 
 cat > /etc/systemd/system/st-backend.target <<EOF
 [Unit]
 Description=Seller tools Backend
 After=rabbitmq-server.target elasticsearch.service
-Requires=st-fetchers.target \
+Wants=st-fetchers.target \
 		st-spiders.target \
 		st-mwsworkers.target \
 		st-echo.service
@@ -25,7 +25,7 @@ cat > /etc/systemd/system/st-fetchers.target <<EOF
 [Unit]
 Description=Seller tools Fetchers
 PartOf=st-backend.target
-Requires=st-fetcher@fetcher-default.service \
+Wants=st-fetcher@fetcher-default.service \
 		st-fetcher@fetcher-priority.service \
 		st-fetcher@progress.service
 EOF
@@ -34,7 +34,7 @@ cat > /etc/systemd/system/st-spiders.target <<EOF
 [Unit]
 Description=Seller tools Spiders
 PartOf=st-backend.target
-Requires=st-spider@default.service \
+Wants=st-spider@default.service \
 		st-spider@medium.service \
 		st-spider@index.service \
 		st-spider@priority.service
@@ -44,7 +44,7 @@ cat > /etc/systemd/system/st-mwsworkers.target <<EOF
 [Unit]
 Description=Seller tools Spiders
 PartOf=st-backend.target
-Requires=st-mwsworker@default.service \
+Wants=st-mwsworker@default.service \
 		st-mwsworker@priority.service
 EOF
 
@@ -138,7 +138,7 @@ cd ${stpath}/app
 if [[ $(/usr/bin/php artisan migrate:status) = 'No migrations found.' ]]; then
 	echo "Migrating database"
 	/usr/bin/php artisan migrate --seed
-
+ 
 	echo "Generating app key"
 	appkey=$(/usr/bin/php artisan key:generate --show)
 
