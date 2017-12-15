@@ -6,8 +6,21 @@ cat > /etc/systemd/system/st-app.target <<EOF
 [Unit]
 Description=Seller tools
 After=network.target php7.1-fpm.service
-Wants=st-frontend.service\
-		st-backend.target 
+Wants=st-frontend.service \
+		st-backend.target
+EOF
+
+cat > /etc/systemd/system/st-app@.service <<EOF
+[Unit]
+Description=Seller.Tools App workers
+After=network.target
+PartOf=st-app.target
+
+[Service]
+Type=simple
+User=vagrant
+WorkingDirectory=$stpath
+ExecStart=/usr/bin/php ${stpath}/app/artisan queue:work %i
 EOF
 
 cat > /etc/systemd/system/st-backend.target <<EOF
@@ -17,7 +30,8 @@ After=rabbitmq-server.target elasticsearch.service
 Wants=st-fetchers.target \
 		st-spiders.target \
 		st-mwsworkers.target \
-		st-echo.service
+		st-echo.service \
+		st-app@app-default.service
 PartOf=st-app.target
 EOF
 

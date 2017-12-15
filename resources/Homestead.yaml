@@ -14,16 +14,16 @@ folders:
       to: /home/vagrant/Code
 
 sites:
-    - map: seller-tools.app
+    - map: seller-tools.test
       to: 3000
       type: proxy
-    - map: api.seller-tools.app
-      to: /home/vagrant/Code/seller-tools/app/public
-    - map: fetcher.seller-tools.app
+    - map: api.seller-tools.test
+      to: /home/vagrant/Code/seller-tools.test/public
+    - map: fetcher.seller-tools.test
       to: /home/vagrant/Code/seller-tools/fetcher/public
-    - map: graphs.seller-tools.app
+    - map: graphs.seller-tools.test
       to: /home/vagrant/Code/seller-tools/graphs/public
-    - map: rm.seller-tools.app
+    - map: rm.seller-tools.test
       to: /home/vagrant/Code/seller-tools/rotation-manager/public
 
 databases:
