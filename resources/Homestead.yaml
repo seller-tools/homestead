@@ -12,6 +12,8 @@ keys:
 folders:
     - map: ~/Code
       to: /home/vagrant/Code
+      options:
+        fsnotify: true
 
 sites:
     - map: seller-tools.test
