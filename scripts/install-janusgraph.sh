@@ -78,6 +78,21 @@ StandardOutput=journal
 StandardError=journal
 LimitNOFILE=infinity
 
+# Disable timeout logic and wait until process is stopped
+TimeoutStopSec=0
+
+# SIGTERM signal is used to stop the Java process
+KillSignal=SIGTERM
+
+# Send the signal only to the JVM rather than its control group
+KillMode=process
+
+# Java process is never killed
+SendSIGKILL=no
+
+# When a JVM receives a SIGTERM signal it exits with code 143
+SuccessExitStatus=143
+
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -92,13 +107,29 @@ PartOf=janusgraph.target
 Type=simple
 User=vagrant
 Group=vagrant
+PIDFile=/opt/janusgraph/run/es.pid
 Environment=LOG_DIR=/opt/janusgraph/log/
 WorkingDirectory=/opt/janusgraph
 ExecStartPre=/opt/janusgraph/elasticsearch/bin/elasticsearch-systemd-pre-exec
-ExecStart=/opt/janusgraph/elasticsearch/bin/elasticsearch --quiet -Edefault.path.logs=\${LOG_DIR}
+ExecStart=/opt/janusgraph/elasticsearch/bin/elasticsearch -p /opt/janusgraph/run/es.pid --quiet -Edefault.path.logs=\${LOG_DIR}
 StandardOutput=journal
 StandardError=journal
 LimitNOFILE=infinity
+
+# Disable timeout logic and wait until process is stopped
+TimeoutStopSec=0
+
+# SIGTERM signal is used to stop the Java process
+KillSignal=SIGTERM
+
+# Send the signal only to the JVM rather than its control group
+KillMode=process
+
+# Java process is never killed
+SendSIGKILL=no
+
+# When a JVM receives a SIGTERM signal it exits with code 143
+SuccessExitStatus=143
 
 [Install]
 WantedBy=multi-user.target
@@ -131,3 +162,7 @@ Requires=janusgraph-cassandra.service \
 		janusgraph-es.service \
 		janusgraph-gremlin.service
 EOF
+
+
+sudo systemctl enable janusgraph.target
+sudo systemctl start janusgraph.target
