@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
-#if [ -f /home/vagrant/.elasticsearch ]
-#then
-#	echo "Elasticsearch already installed."
-#    exit 0
-#fi
+if [ -f /home/vagrant/.elasticsearch ]
+then
+	echo "Elasticsearch already installed."
+    exit 0
+fi
+
+echo "5.5.2" > /home/vagrant/.elasticsearch
+
 
 sudo apt-get -y install openjdk-8-jdk
 sudo update-alternatives --config java

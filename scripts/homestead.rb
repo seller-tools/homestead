@@ -396,12 +396,22 @@ class Homestead
             end
         end
 
-        # Install php redis
+        # Install elasitc search
         if settings.has_key?("elasticsearch") && settings["elasticsearch"]
             setts = settings["elasticsearch"]
             config.vm.provision "shell" do |s|
                 s.name = "Installing elasticsearch:"
                 s.path = scriptDir + "/install-elasticsearch.sh"
+            end
+        end
+
+        # Install janus graph
+        if settings.has_key?("janusgraph") && settings["janusgraph"]
+            setts = settings["janusgraph"]
+            config.vm.provision "shell" do |s|
+                s.name = "Installing JanusGraph:"
+                s.path = scriptDir + "/install-janusgraph.sh"
+                s.args = [settings["ip"]]
             end
         end
 

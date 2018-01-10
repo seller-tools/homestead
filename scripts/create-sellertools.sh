@@ -30,8 +30,7 @@ After=rabbitmq-server.target elasticsearch.service
 Wants=st-fetchers.target \
 		st-spiders.target \
 		st-mwsworkers.target \
-		st-echo.service \
-		st-app@app-default.service
+		st-echo.service
 PartOf=st-app.target
 EOF
 

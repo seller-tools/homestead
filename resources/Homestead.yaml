@@ -18,7 +18,7 @@ sites:
       to: 3000
       type: proxy
     - map: api.seller-tools.test
-      to: /home/vagrant/Code/seller-tools.test/public
+      to: /home/vagrant/Code/seller-tools/app/public
     - map: fetcher.seller-tools.test
       to: /home/vagrant/Code/seller-tools/fetcher/public
     - map: graphs.seller-tools.test
@@ -34,6 +34,7 @@ influxdb: true
 echo-server: true
 redis: true
 elasticsearch: true
+janusgraph: true
 
 rabbitmq:
     port: 5672
