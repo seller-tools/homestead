@@ -15,11 +15,9 @@ sudo mv /opt/janusgraph-0.2.0-hadoop2 /opt/janusgraph
 mkdir /opt/janusgraph/run
 sudo chown -R vagrant /opt/janusgraph
 
-echo '
-network.host: 0.0.0.0
+echo 'network.host: 0.0.0.0
 http.port: 9500
-transport.tcp.port: 9600
-' >> /opt/janusgraph/elasticsearch/config/elasticsearch.yml 
+transport.tcp.port: 9600' >> /opt/janusgraph/elasticsearch/config/elasticsearch.yml 
 
 # Add graph connection settings
 cat > /opt/janusgraph/conf/st.properties <<EOF
@@ -37,7 +35,7 @@ index.search.hostname=127.0.0.1:9500
 EOF
 
 # Add gremlin graph connection settings
-cat > /opt/janusgraph/conf/gremlin-server/st.properties <<EOF
+cat > /opt/janusgraph/conf/gremlin-server/st-server.properties <<EOF
 # JanusGraph configuration: Cassandra & Elasticsearch over sockets
 
 gremlin.graph=org.janusgraph.core.JanusGraphFactory
@@ -56,7 +54,10 @@ index.search.elasticsearch.client-only=true
 EOF
 
 # Set gremlin graph configuration
-sed -i '/graphs/a\  st: conf/gremlin-server/st.properties,' /opt/janusgraph/conf/gremlin-server/gremlin-server.yaml
+sed -i '/graph:/c\  graph: conf/gremlin-server/st-server.properties' /opt/janusgraph/conf/gremlin-server/gremlin-server.yaml
+
+# Increase timeout
+sed -i '/scriptEvaluationTimeout:/c\scriptEvaluationTimeout: 120000' /opt/janusgraph/conf/gremlin-server/gremlin-server.yaml
 
 # Set cassandra host
 sed -i "/rpc_address:/c\rpc_address: $HOST" /opt/janusgraph/conf/cassandra/cassandra.yaml
@@ -138,17 +139,34 @@ EOF
 cat > /etc/systemd/system/janusgraph-gremlin.service <<EOF
 [Unit]
 Description=JanusGraph Gremlin server
-After=network.target
+After=janusgraph-cassandra.service janusgraph-es.service
 PartOf=janusgraph.target
 
 [Service]
 Type=simple
 User=vagrant
 Group=vagrant
+WorkingDirectory=/opt/janusgraph
+ExecStartPre=/bin/sleep 30
 ExecStart=/opt/janusgraph/bin/gremlin-server.sh /opt/janusgraph/conf/gremlin-server/gremlin-server.yaml
 StandardOutput=journal
 StandardError=journal
 LimitNOFILE=infinity
+
+# Disable timeout logic and wait until process is stopped
+TimeoutStopSec=0
+
+# SIGTERM signal is used to stop the Java process
+KillSignal=SIGTERM
+
+# Send the signal only to the JVM rather than its control group
+KillMode=process
+
+# Java process is never killed
+SendSIGKILL=no
+
+# When a JVM receives a SIGTERM signal it exits with code 143
+SuccessExitStatus=143
 
 [Install]
 WantedBy=multi-user.target
@@ -158,7 +176,7 @@ cat > /etc/systemd/system/janusgraph.target <<EOF
 [Unit]
 Description=JanusGraph
 After=network.target
-Requires=janusgraph-cassandra.service \
+Wants=janusgraph-cassandra.service \
 		janusgraph-es.service \
 		janusgraph-gremlin.service
 EOF
