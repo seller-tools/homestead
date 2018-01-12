@@ -141,6 +141,8 @@ cat > /etc/systemd/system/janusgraph-gremlin.service <<EOF
 Description=JanusGraph Gremlin server
 After=janusgraph-cassandra.service janusgraph-es.service
 PartOf=janusgraph.target
+Requires=janusgraph-cassandra.service janusgraph-es.service
+
 
 [Service]
 Type=simple
@@ -179,8 +181,11 @@ After=network.target
 Wants=janusgraph-cassandra.service \
 		janusgraph-es.service \
 		janusgraph-gremlin.service
+
+[Install]
+WantedBy=multi-user.target
 EOF
 
 
-sudo systemctl enable janusgraph.target
-sudo systemctl start janusgraph.target
+systemctl enable janusgraph.target
+systemctl start janusgraph.target
