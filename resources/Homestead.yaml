@@ -14,6 +14,10 @@ folders:
       to: /home/vagrant/Code
       options:
         fsnotify: true
+        exclude:
+          - seller-tools/vagrant
+          - seller-tools/fe/node_modules
+          - seller-tools/.git
 
 sites:
     - map: seller-tools.test
