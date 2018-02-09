@@ -73,7 +73,7 @@ Type=forking
 PIDFile=/opt/janusgraph/run/cassandra.pid
 User=vagrant
 Group=vagrant
-Environment=CASSANDRA_INCLUDE=/opt/janusgraph/bin/cassandra.in.sh
+Environment=CASSANDRA_INCLUDE=/opt/janusgraph/bin/cassandra.in.sh; JVM_OPTS=-Xms=100m -Xmx5g -Xss5m
 ExecStart=/opt/janusgraph/bin/cassandra -p /opt/janusgraph/run/cassandra.pid
 StandardOutput=journal
 StandardError=journal
@@ -149,6 +149,7 @@ Type=simple
 User=vagrant
 Group=vagrant
 WorkingDirectory=/opt/janusgraph
+Environment=JAVA_OPTIONS="-Xss4m -Xms32m -Xmx512m -javaagent:/opt/janusgraph/lib/jamm-0.3.0.jar -Dgremlin.io.kryoShimService=org.janusgraph.hadoop.serialize.JanusGraphKryoShimService"
 ExecStartPre=/bin/sleep 45
 ExecStart=/opt/janusgraph/bin/gremlin-server.sh /opt/janusgraph/conf/gremlin-server/gremlin-server.yaml
 StandardOutput=journal
