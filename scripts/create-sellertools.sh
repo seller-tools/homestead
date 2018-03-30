@@ -39,6 +39,7 @@ cat > /etc/systemd/system/st-fetchers.target <<EOF
 Description=Seller tools Fetchers
 PartOf=st-backend.target
 Wants=st-fetcher@fetcher-default.service \
+		st-fetcher@fetcher-medium.service \
 		st-fetcher@fetcher-priority.service \
 		st-fetcher@progress.service
 EOF
