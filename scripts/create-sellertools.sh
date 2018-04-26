@@ -60,8 +60,7 @@ Description=Seller tools Keyword Generator Spiders
 PartOf=st-backend.target
 Wants=st-kwgen@search.service \
         st-kwgen@sugg.service \
-        st-kwgen@impress.service \
-        st-kwgen@impress-feeder.service
+        st-kwgen@impress.service
 EOF
 
 cat > /etc/systemd/system/st-mwsworkers.target <<EOF
