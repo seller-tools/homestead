@@ -6,8 +6,7 @@ cat > /etc/systemd/system/st-app.target <<EOF
 [Unit]
 Description=Seller tools
 After=network.target php7.1-fpm.service
-Wants=st-frontend.service \
-		st-backend.target
+Wants=st-backend.target
 EOF
 
 cat > /etc/systemd/system/st-app@.service <<EOF
@@ -29,6 +28,7 @@ Description=Seller tools Backend
 After=rabbitmq-server.target elasticsearch.service
 Wants=st-fetchers.target \
 		st-spiders.target \
+		st-kwgen.target \
 		st-mwsworkers.target \
 		st-echo.service
 PartOf=st-app.target
@@ -52,6 +52,16 @@ Wants=st-spider@default.service \
 		st-spider@medium.service \
 		st-spider@index.service \
 		st-spider@priority.service
+EOF
+
+cat > /etc/systemd/system/st-kwgen.target <<EOF
+[Unit]
+Description=Seller tools Keyword Generator Spiders
+PartOf=st-backend.target
+Wants=st-kwgen@search.service \
+        st-kwgen@sugg.service \
+        st-kwgen@impress.service \
+        st-kwgen@impress-feeder.service
 EOF
 
 cat > /etc/systemd/system/st-mwsworkers.target <<EOF
@@ -86,6 +96,19 @@ Type=simple
 User=vagrant
 WorkingDirectory=$stpath
 ExecStart=/usr/bin/php ${stpath}/spider/src/worker.php spider-%i
+EOF
+
+cat > /etc/systemd/system/st-kwgen@.service <<EOF
+[Unit]
+Description=Seller tools Keyword Generator Service
+After=network.target
+PartOf=st-kwgen.target
+
+[Service]
+Type=simple
+User=vagrant
+WorkingDirectory=$stpath
+ExecStart=/usr/bin/php ${stpath}/spider/src/worker.php kwgen-%i
 EOF
 
 cat > /etc/systemd/system/st-mwsworker@.service <<EOF
@@ -146,11 +169,7 @@ echo "Composer install"
 if [ ! -f /home/vagrant/.ssh/known_hosts ]; then 
 	ssh-keyscan github.com > /home/vagrant/.ssh/known_hosts
 fi
-sudo -u vagrant -H sh -c "cd ${stpath}; /usr/local/bin/composer install" 
-
-echo "Yarn"
-cd ${stpath}/frontend
-yarn
+sudo -u vagrant -H sh -c "cd ${stpath}; /usr/local/bin/composer install"
 
 cd ${stpath}/app
 ## Check migrations
