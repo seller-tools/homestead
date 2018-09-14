@@ -171,6 +171,10 @@ class Homestead
             end
         end
 
+        config.vm.provision "shell" do |s|
+            s.path = scriptDir + "/install-php.sh"
+        end
+
         # Install All The Configured Nginx Sites
         config.vm.provision "shell" do |s|
             s.path = scriptDir + "/clear-nginx.sh"
