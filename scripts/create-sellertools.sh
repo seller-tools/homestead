@@ -152,7 +152,7 @@ EOF
 echo "Install dependencies"
 #sudo apt -y install php-mbstring php-xml php-curl php-mongodb php-gd php-bcmath php-mysql
 
-sudo update-alternatives --set php /usr/bin/php7.1
+sudo update-alternatives --set php /usr/bin/php7.2
 
 echo "Configuring SellerTools"
 

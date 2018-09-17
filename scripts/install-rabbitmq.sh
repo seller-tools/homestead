@@ -18,7 +18,7 @@ then
     wget "https://dl.bintray.com/rabbitmq/community-plugins/rabbitmq_delayed_message_exchange-0.0.1.ez"
 
     # TODO: change destination folder based on installed rabbitmq version
-    sudo mv rabbitmq_delayed_message_exchange-0.0.1.ez /usr/lib/rabbitmq/lib/rabbitmq_server-3.5.7/plugins/
+    sudo mv rabbitmq_delayed_message_exchange-0.0.1.ez /usr/lib/rabbitmq/lib/rabbitmq_server-3.6.10/plugins/
 
     sudo rabbitmq-plugins enable rabbitmq_delayed_message_exchange
 
